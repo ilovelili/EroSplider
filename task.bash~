@@ -1,0 +1,6 @@
+#!/bin/bash
+
+npm install
+casperjs spider.js
+nodejs dumper.js
+
