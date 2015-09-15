@@ -3,7 +3,7 @@ var MongoClient = require('mongodb').MongoClient,
     db,
     fs = require('fs');
 
-var mongoClient = new MongoClient(new Server('localhost', 27017));
+var mongoClient = new MongoClient(new Server('45.55.130.170', 27017));
 mongoClient.open(function(err, mongoClient) {
     db = mongoClient.db("ero");
     db.collection('videos', {
@@ -14,6 +14,15 @@ mongoClient.open(function(err, mongoClient) {
         mongoClient.close();
     });
 });
+
+var resloveDate = function(rawDate) {
+    var fragments = rawDate.split('-'),
+        year = fragments[2],
+        month = fragments[0] - 1, // month from 0 to 11
+        day = fragments[1];
+
+    return new Date(year, month, day);
+};
 
 var readFile = function() {
     var dir = './output/',
@@ -31,19 +40,21 @@ var readFile = function() {
                 thumbnail = fragment[3],
                 title = fragment[4],
                 duration = fragment[5],
-                date = fragment[6];
-                
+                date = resloveDate(fragment[6]),
+                enabled = true;
+
             result.push({
-               "title":  title,
-               "link": link,
-               "thumbnail": thumbnail,
-               "category": category,
-               "duration": duration,
-               "date": date
+                "title": title,
+                "link": link,
+                "thumbnail": thumbnail,
+                "category": category,
+                "duration": duration,
+                "date": date,
+                "enabled": enabled
             });
         }
     });
-    
+
     console.log(result);
     return result;
 };
@@ -54,7 +65,7 @@ var populateDB = function(data) {
         return;
     }
     console.log("Populating database...");
-    
+
     db.collection('videos', function(err, collection) {
         collection.insert(data, {
             safe: true
