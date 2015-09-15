@@ -66,9 +66,22 @@ var populateDB = function(data) {
     }
     console.log("Populating database...");
 
-    db.collection('videos', function(err, collection) {
+    for (var i = 0; i < data.length; i++) {
+        db.collection('videos', function(err, collection) {
+            if (!err) {
+                collection.update({
+                    title: data[i].title
+                }, data[i], {
+                    upsert: true,
+                    multi: false,
+                    safe: true
+                });
+            }
+        });
+    }
+    /*db.collection('videos', function(err, collection) {
         collection.insert(data, {
             safe: true
         }, function(err, result) {});
-    });
+    });*/
 };
