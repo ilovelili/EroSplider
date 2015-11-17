@@ -7,7 +7,7 @@
     ----------------------------------------------------------------- 
 
 
-Ero spider
+X spider
 
 Todo:
     .dump crawled csv into mongodb
